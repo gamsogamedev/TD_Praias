@@ -10,6 +10,9 @@ public class Unit : MonoBehaviour
 
     [Header("Combat")]
     public string enemyTag;
+    public string towerType;
+    public float tempoDeDestruir = 2f;
+    private bool atacando = false;
 
     public void SetPath(Transform[] points)
     {
@@ -24,6 +27,9 @@ public class Unit : MonoBehaviour
 
     void Update()
     {
+        if (atacando) 
+            return;
+
         if (path == null || currentPointIndex >= path.Length)
             return;
 
@@ -62,10 +68,12 @@ public class Unit : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(enemyTag))
+        Debug.Log("O inimigo bateu em: " + other.gameObject.name + "Tag: " + other.tag);
+        if (other.CompareTag(enemyTag) || other.CompareTag(towerType))
         {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
+            atacando = true;
+            Destroy(other.gameObject, tempoDeDestruir);
+            Destroy(gameObject, tempoDeDestruir);
         }
     }
 }
