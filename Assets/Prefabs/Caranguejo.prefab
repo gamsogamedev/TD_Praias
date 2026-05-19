@@ -171,3 +171,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Unit
   speed: 2
   enemyTag: Enemy
+  towerType: TowerEnemy
+  tempoDeDestruir: 2

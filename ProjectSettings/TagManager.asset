@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Tower
+  - TowerPlayer
+  - TowerInimigo
   layers:
   - Default
   - TransparentFX
