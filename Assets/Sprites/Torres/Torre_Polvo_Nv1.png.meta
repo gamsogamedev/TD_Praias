@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ea7e2cb317840214f81cfc452228fed3
+guid: 302bae7b1d69f444683f2e3c6e13b3eb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1955448553306655712
-    second: Background_0
+      213: 225075997349943368
+    second: Torre_Polvo_Nv1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Background_0
+      name: Torre_Polvo_Nv1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 736
-        height: 490
+        y: 49
+        width: 1351
+        height: 932
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 024fa93b6e9dcd4e0800000000000000
-      internalID: -1955448553306655712
+      spriteID: 84892855d61af1300800000000000000
+      internalID: 225075997349943368
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Background_0: -1955448553306655712
+      Torre_Polvo_Nv1_0: 225075997349943368
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
