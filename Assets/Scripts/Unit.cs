@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Unit : MonoBehaviour
 {
@@ -13,6 +14,21 @@ public class Unit : MonoBehaviour
     public string towerType;
     public float tempoDeDestruir = 2f;
     private bool atacando = false;
+    private Animator anim;
+
+    [Header("Comportamento de Pausa")]
+    public bool movimentoIntermitente = false;
+    public float tempoAndando = 3f;
+    public float tempoPausado = 1f;
+    private bool estaPausado = false;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+        if (movimentoIntermitente){
+            StartCoroutine(RotinaDeMovimento());
+        }
+    }
 
     public void SetPath(Transform[] points)
     {
@@ -27,12 +43,18 @@ public class Unit : MonoBehaviour
 
     void Update()
     {
-        if (atacando) 
+        if (atacando || estaPausado) 
+        {
+            if (anim != null) 
+            {
+                anim.SetBool("walking", false);
+            }
             return;
-
-        if (path == null || currentPointIndex >= path.Length)
-            return;
-
+        }
+        if (path == null || currentPointIndex >= path.Length){
+            if (anim != null) anim.SetBool("walking", false);
+                return;
+        }
         Transform target = path[currentPointIndex];
 
         transform.position = Vector2.MoveTowards(
@@ -40,7 +62,7 @@ public class Unit : MonoBehaviour
             target.position,
             speed * Time.deltaTime
         );
-
+        if (anim != null) anim.SetBool("walking", true);
         RotateTowards(target);
 
         if (Vector2.Distance(transform.position, target.position) < 0.1f)
@@ -51,6 +73,18 @@ public class Unit : MonoBehaviour
             {
                 ReachedEnd();
             }
+        }
+    }
+
+    IEnumerator RotinaDeMovimento()
+    {
+        while (true) 
+        {
+            estaPausado = false; 
+            yield return new WaitForSeconds(tempoAndando);
+
+            estaPausado = true; 
+            yield return new WaitForSeconds(tempoPausado); 
         }
     }
 
@@ -72,6 +106,11 @@ public class Unit : MonoBehaviour
         if (other.CompareTag(enemyTag) || other.CompareTag(towerType))
         {
             atacando = true;
+            StopAllCoroutines();
+            if (anim != null) 
+            {
+                anim.SetBool("walking", false);
+            }
             Destroy(other.gameObject, tempoDeDestruir);
             Destroy(gameObject, tempoDeDestruir);
         }
