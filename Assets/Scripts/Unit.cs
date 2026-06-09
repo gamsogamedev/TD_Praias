@@ -12,20 +12,28 @@ public class Unit : MonoBehaviour
     [Header("Combat")]
     public string enemyTag;
     public string towerType;
-    public float tempoDeDestruir = 2f;
+
+    public int damage = 1;
+    public float knockbackForce = 0.5f;
+
     private bool atacando = false;
+    private bool hitCooldown = false;
+
     private Animator anim;
 
     [Header("Comportamento de Pausa")]
     public bool movimentoIntermitente = false;
     public float tempoAndando = 3f;
     public float tempoPausado = 1f;
+
     private bool estaPausado = false;
 
     void Start()
     {
         anim = GetComponent<Animator>();
-        if (movimentoIntermitente){
+
+        if (movimentoIntermitente)
+        {
             StartCoroutine(RotinaDeMovimento());
         }
     }
@@ -43,18 +51,26 @@ public class Unit : MonoBehaviour
 
     void Update()
     {
-        if (atacando || estaPausado) 
+        if (atacando || estaPausado)
         {
-            if (anim != null) 
+            if (anim != null)
             {
                 anim.SetBool("walking", false);
             }
+
             return;
         }
-        if (path == null || currentPointIndex >= path.Length){
-            if (anim != null) anim.SetBool("walking", false);
-                return;
+
+        if (path == null || currentPointIndex >= path.Length)
+        {
+            if (anim != null)
+            {
+                anim.SetBool("walking", false);
+            }
+
+            return;
         }
+
         Transform target = path[currentPointIndex];
 
         transform.position = Vector2.MoveTowards(
@@ -62,7 +78,12 @@ public class Unit : MonoBehaviour
             target.position,
             speed * Time.deltaTime
         );
-        if (anim != null) anim.SetBool("walking", true);
+
+        if (anim != null)
+        {
+            anim.SetBool("walking", true);
+        }
+
         RotateTowards(target);
 
         if (Vector2.Distance(transform.position, target.position) < 0.1f)
@@ -78,21 +99,27 @@ public class Unit : MonoBehaviour
 
     IEnumerator RotinaDeMovimento()
     {
-        while (true) 
+        while (true)
         {
-            estaPausado = false; 
+            estaPausado = false;
+
             yield return new WaitForSeconds(tempoAndando);
 
-            estaPausado = true; 
-            yield return new WaitForSeconds(tempoPausado); 
+            estaPausado = true;
+
+            yield return new WaitForSeconds(tempoPausado);
         }
     }
 
     void RotateTowards(Transform target)
     {
         Vector2 direction = target.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        float angle =
+            Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        transform.rotation =
+            Quaternion.Euler(0f, 0f, angle);
     }
 
     void ReachedEnd()
@@ -102,17 +129,79 @@ public class Unit : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("O inimigo bateu em: " + other.gameObject.name + "Tag: " + other.tag);
-        if (other.CompareTag(enemyTag) || other.CompareTag(towerType))
+        if (hitCooldown)
+            return;
+
+        if (other.CompareTag(enemyTag))
         {
-            atacando = true;
-            StopAllCoroutines();
-            if (anim != null) 
-            {
-                anim.SetBool("walking", false);
-            }
-            Destroy(other.gameObject, tempoDeDestruir);
-            Destroy(gameObject, tempoDeDestruir);
+            StartCoroutine(ProcessHit(other));
         }
+    }
+
+    IEnumerator ProcessHit(Collider2D other)
+    {
+        hitCooldown = true;
+
+        Health myHealth = GetComponent<Health>();
+        Health enemyHealth = other.GetComponent<Health>();
+
+        Unit enemyUnit = other.GetComponent<Unit>();
+
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damage);
+        }
+
+        if (enemyUnit != null && myHealth != null)
+        {
+            myHealth.TakeDamage(enemyUnit.damage);
+        }
+
+        ApplyKnockback(other.transform.position);
+
+        if (enemyUnit != null)
+        {
+            enemyUnit.ApplyKnockback(transform.position);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        hitCooldown = false;
+    }
+
+    public void ApplyKnockback(Vector3 sourcePosition)
+    {
+        StartCoroutine(KnockbackRoutine(sourcePosition));
+    }
+
+    IEnumerator KnockbackRoutine(Vector3 sourcePosition)
+    {
+        atacando = true;
+
+        Vector2 direction =
+            (transform.position - sourcePosition).normalized;
+
+        Vector3 startPosition = transform.position;
+
+        Vector3 targetPosition =
+            startPosition + (Vector3)(direction * knockbackForce);
+
+        float duration = 0.15f;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            transform.position = Vector3.Lerp(
+                startPosition,
+                targetPosition,
+                timer / duration
+            );
+
+            yield return null;
+        }
+
+        atacando = false;
     }
 }

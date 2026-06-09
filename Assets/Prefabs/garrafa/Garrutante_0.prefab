@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8476809277900991787}
   - component: {fileID: -9067407169710865345}
   - component: {fileID: 7170881025372456163}
+  - component: {fileID: 6467220370803715199}
   m_Layer: 0
   m_Name: Garrutante_0
   m_TagString: Enemy
@@ -31,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.062108, y: 0.012551844, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -129,10 +130,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e04099cb1ca394cbccff59e4521afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
-  speed: 1
+  speed: 2
   enemyTag: Player
   towerType: TowerPlayer
-  tempoDeDestruir: 2
+  damage: 1
+  knockbackForce: 0.5
   movimentoIntermitente: 0
   tempoAndando: 3
   tempoPausado: 1
@@ -199,3 +201,16 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 4.97
+--- !u!114 &6467220370803715199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4399532882403731242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f926f9aac55e288428d92a737c2f0d0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 4
