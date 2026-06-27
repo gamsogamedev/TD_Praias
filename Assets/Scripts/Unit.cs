@@ -19,6 +19,9 @@ public class Unit : MonoBehaviour
     private bool atacando = false;
     private bool hitCooldown = false;
 
+    [Header("Base Damage")]
+    public int baseDamage = 1;
+
     private Animator anim;
 
     [Header("Comportamento de Pausa")]
@@ -84,8 +87,6 @@ public class Unit : MonoBehaviour
             anim.SetBool("walking", true);
         }
 
-        RotateTowards(target);
-
         if (Vector2.Distance(transform.position, target.position) < 0.1f)
         {
             currentPointIndex++;
@@ -111,19 +112,15 @@ public class Unit : MonoBehaviour
         }
     }
 
-    void RotateTowards(Transform target)
-    {
-        Vector2 direction = target.position - transform.position;
-
-        float angle =
-            Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        transform.rotation =
-            Quaternion.Euler(0f, 0f, angle);
-    }
-
     void ReachedEnd()
     {
+        BaseHealth enemyBase = FindFirstObjectByType<BaseHealth>();
+
+        if (enemyBase != null)
+        {
+            enemyBase.TakeDamage(baseDamage);
+        }
+
         Destroy(gameObject);
     }
 
@@ -178,13 +175,11 @@ public class Unit : MonoBehaviour
     {
         atacando = true;
 
-        Vector2 direction =
-            (transform.position - sourcePosition).normalized;
+        Vector2 direction = (transform.position - sourcePosition).normalized;
 
         Vector3 startPosition = transform.position;
 
-        Vector3 targetPosition =
-            startPosition + (Vector3)(direction * knockbackForce);
+        Vector3 targetPosition = startPosition + (Vector3)(direction * knockbackForce);
 
         float duration = 0.15f;
         float timer = 0f;

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &649745445054406816
+--- !u!1 &2634823489143186446
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,72 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4327501117661220937}
-  - component: {fileID: 613171412112768502}
-  - component: {fileID: 4854308530059864089}
-  - component: {fileID: 1667817202027299255}
+  - component: {fileID: 3770689609633940359}
   m_Layer: 0
-  m_Name: Torre_Carangueijo
+  m_Name: Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4327501117661220937
+--- !u!4 &3770689609633940359
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649745445054406816}
+  m_GameObject: {fileID: 2634823489143186446}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.56, y: 2.66, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2732086502431081570}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7002956761931824721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2732086502431081570}
+  - component: {fileID: 8987328063715406257}
+  - component: {fileID: 4191533993083546246}
+  - component: {fileID: 3930752556469617542}
+  m_Layer: 0
+  m_Name: Torre_Tortuga
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2732086502431081570
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002956761931824721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.1880703, y: -0.6516043, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 6269219176431983822}
+  - {fileID: 3770689609633940359}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &613171412112768502
+--- !u!212 &8987328063715406257
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649745445054406816}
+  m_GameObject: {fileID: 7002956761931824721}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -84,7 +115,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2851529037384265026, guid: bb2511b1c3e747348ba87963c2913d5c, type: 3}
+  m_Sprite: {fileID: -2186757146566859800, guid: 9e631e20963f4aa4aaee11e9b58d6253, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,43 +125,43 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &4854308530059864089
+--- !u!114 &4191533993083546246
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649745445054406816}
+  m_GameObject: {fileID: 7002956761931824721}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b790ff483d305c4e83b151393e5359d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   levels:
-  - towerSprite: {fileID: -2851529037384265026, guid: bb2511b1c3e747348ba87963c2913d5c, type: 3}
-    troopPrefab: {fileID: 4296938898942938646, guid: 265e158199ae7990ab1f1afeb8202c88, type: 3}
+  - towerSprite: {fileID: -2186757146566859800, guid: 9e631e20963f4aa4aaee11e9b58d6253, type: 3}
+    troopPrefab: {fileID: 4296938898942938646, guid: ebf1a5b9731de6148885c63ca403ccf8, type: 3}
     spawnRate: 5
-  - towerSprite: {fileID: 3475310116108365970, guid: 650b1c377928f64438ee034286872efa, type: 3}
-    troopPrefab: {fileID: 4296938898942938646, guid: e9c1a059cbd22514fa3a11d66bf080e5, type: 3}
+  - towerSprite: {fileID: -6429329311547935182, guid: 6e493da0b3560b544a2afb8c6b56abd3, type: 3}
+    troopPrefab: {fileID: 4296938898942938646, guid: ebf1a5b9731de6148885c63ca403ccf8, type: 3}
     spawnRate: 3
-  - towerSprite: {fileID: -4726416964398720636, guid: dfe4f91309e57aa409fe4ed8a8578e32, type: 3}
-    troopPrefab: {fileID: 4296938898942938646, guid: cbe6346a254f460478e62d59c2f01eef, type: 3}
+  - towerSprite: {fileID: -8781708071422682329, guid: 238d1686d2bd2a747ae0351fdbe751ae, type: 3}
+    troopPrefab: {fileID: 4296938898942938646, guid: ebf1a5b9731de6148885c63ca403ccf8, type: 3}
     spawnRate: 3
-  spriteRenderer: {fileID: 613171412112768502}
-  spawnPoint: {fileID: 6269219176431983822}
+  spriteRenderer: {fileID: 8987328063715406257}
+  spawnPoint: {fileID: 3770689609633940359}
   pathPoints:
-  - {fileID: 4327501117661220937}
+  - {fileID: 2732086502431081570}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   upgradeEffectPrefab: {fileID: 3003916923803258827, guid: f09587d66abfb8246a003d9c89201053, type: 3}
---- !u!61 &1667817202027299255
+--- !u!61 &3930752556469617542
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649745445054406816}
+  m_GameObject: {fileID: 7002956761931824721}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -162,42 +193,11 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.89, y: 0.93}
+    oldSize: {x: 13.6, y: 12.12}
     newSize: {x: 0.89, y: 0.93}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.05, y: 0.84}
+  m_Size: {x: 13.6, y: 12.12}
   m_EdgeRadius: 0
---- !u!1 &671485050083058699
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6269219176431983822}
-  m_Layer: 0
-  m_Name: Spawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6269219176431983822
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 671485050083058699}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4327501117661220937}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
