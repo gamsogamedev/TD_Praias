@@ -8,6 +8,10 @@ public class BuildSpot : MonoBehaviour
     [Header("Torre Construída")]
     public Tower currentTower;
 
+    [Header("Visual")]
+    [Tooltip("Objeto visual do slot vazio (ícone no chão). Opcional.")]
+    public GameObject spotVisual;
+
     public bool IsOccupied()
     {
         return currentTower != null;
@@ -23,5 +27,17 @@ public class BuildSpot : MonoBehaviour
         {
             Debug.Log("Já existe uma torre aqui!");
         }
+    }
+
+    public void HideSpotVisual()
+    {
+        if (spotVisual != null)
+            spotVisual.SetActive(false);
+    }
+
+    public void ShowSpotVisual()
+    {
+        if (spotVisual != null)
+            spotVisual.SetActive(true);
     }
 }

@@ -5,6 +5,9 @@ using System.Collections;
 
 public class BaseHealth : MonoBehaviour
 {
+    [Header("Time")]
+    public Team team;
+
     [Header("Base HP")]
     public int maxHealth = 20;
 
@@ -95,7 +98,14 @@ public class BaseHealth : MonoBehaviour
 
     void DestroyBase()
     {
-        Debug.Log("Base destruída!");
+        if (team == Team.Player)
+        {
+            Debug.Log("Você perdeu!");
+        }
+        else
+        {
+            Debug.Log("Você venceu!");
+        }
 
         LoadNextLevel();
     }
@@ -113,5 +123,15 @@ public class BaseHealth : MonoBehaviour
         {
             Debug.Log("Última fase concluída!");
         }
+    }
+
+    public float GetHealthPercent()
+    {
+        return (float)currentHealth / maxHealth;
+    }
+
+    public int GetHealth()
+    {
+        return currentHealth;
     }
 }
