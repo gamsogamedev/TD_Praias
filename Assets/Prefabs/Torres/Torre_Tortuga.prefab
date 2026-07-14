@@ -139,14 +139,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   levels:
   - towerSprite: {fileID: -2186757146566859800, guid: 9e631e20963f4aa4aaee11e9b58d6253, type: 3}
-    troopPrefab: {fileID: 2516271110731993764, guid: 46aa2d2ae451f1f41bc1186fc7ab95a8, type: 3}
-    spawnRate: 10
+    spawnRate: 8
+    upgradeCost: 75
+    upgradeIcon: {fileID: -6429329311547935182, guid: 6e493da0b3560b544a2afb8c6b56abd3, type: 3}
+    troopPrefab: {fileID: 2516271110731993764, guid: bc59f4b80348f4246b3915cc9ed685b3, type: 3}
+    cocoPrefab: {fileID: 0}
+    quantidadeCocos: 0
+    velocidadeOrbita: 90
+    raioOrbita: 1.5
+    danoCoco: 1
+    cooldownDanoCoco: 0.5
+    gaivotaPrefab: {fileID: 0}
+    alcanceGaivota: 5
+    intervaloDisparo: 2
+    danoExplosao: 3
+    raioExplosao: 1.2
+    efeitoImpactoPrefab: {fileID: 0}
   - towerSprite: {fileID: -6429329311547935182, guid: 6e493da0b3560b544a2afb8c6b56abd3, type: 3}
+    spawnRate: 6
+    upgradeCost: 150
+    upgradeIcon: {fileID: -8781708071422682329, guid: 238d1686d2bd2a747ae0351fdbe751ae, type: 3}
     troopPrefab: {fileID: 2516271110731993764, guid: 46aa2d2ae451f1f41bc1186fc7ab95a8, type: 3}
-    spawnRate: 3
+    cocoPrefab: {fileID: 0}
+    quantidadeCocos: 0
+    velocidadeOrbita: 90
+    raioOrbita: 1.5
+    danoCoco: 1
+    cooldownDanoCoco: 0.5
+    gaivotaPrefab: {fileID: 0}
+    alcanceGaivota: 5
+    intervaloDisparo: 2
+    danoExplosao: 3
+    raioExplosao: 1.2
+    efeitoImpactoPrefab: {fileID: 0}
   - towerSprite: {fileID: -8781708071422682329, guid: 238d1686d2bd2a747ae0351fdbe751ae, type: 3}
-    troopPrefab: {fileID: 2516271110731993764, guid: 46aa2d2ae451f1f41bc1186fc7ab95a8, type: 3}
-    spawnRate: 3
+    spawnRate: 6
+    upgradeCost: 150
+    upgradeIcon: {fileID: -8781708071422682329, guid: 238d1686d2bd2a747ae0351fdbe751ae, type: 3}
+    troopPrefab: {fileID: 2516271110731993764, guid: 16f39286016e50642849383bdc5f64b1, type: 3}
+    cocoPrefab: {fileID: 0}
+    quantidadeCocos: 0
+    velocidadeOrbita: 90
+    raioOrbita: 1.5
+    danoCoco: 1
+    cooldownDanoCoco: 0.5
+    gaivotaPrefab: {fileID: 0}
+    alcanceGaivota: 5
+    intervaloDisparo: 2
+    danoExplosao: 3
+    raioExplosao: 1.2
+    efeitoImpactoPrefab: {fileID: 0}
   spriteRenderer: {fileID: 8987328063715406257}
   spawnPoint: {fileID: 3770689609633940359}
   pathPoints:

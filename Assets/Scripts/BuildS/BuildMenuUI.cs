@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 
 public class BuildMenuUI : MonoBehaviour
@@ -7,15 +8,15 @@ public class BuildMenuUI : MonoBehaviour
     [Header("Botões do Menu")]
     public BuildMenuButton[] buttons;
 
-    [Header("Configuração Circular")]
-    [Tooltip("Raio do círculo em pixels UI")]
-    public float radius = 100f;
+    [Header("Painel Nível Máximo")]
+    public GameObject maxLevelPanel;
+    public TMP_Text maxLevelText;
 
-    [Tooltip("Ângulo inicial do primeiro botão (90 = cima)")]
+    [Header("Configuração Circular")]
+    public float radius = 100f;
     public float startAngle = 90f;
 
     [Header("Fundo do Menu")]
-    [Tooltip("Image circular semitransparente de fundo. Opcional.")]
     public Image backgroundCircle;
 
     private Canvas canvas;
@@ -29,10 +30,57 @@ public class BuildMenuUI : MonoBehaviour
         Hide();
     }
 
-    public void Show(Vector3 worldPosition, BuildManager.TowerOption[] options)
+    //====================================================
+    // MENU DE CONSTRUÇÃO
+    //====================================================
+
+    public void ShowBuildMenu(Vector3 worldPosition, BuildManager.TowerOption[] options)
     {
         gameObject.SetActive(true);
+        SetPosition(worldPosition);
 
+        if (maxLevelPanel != null)
+            maxLevelPanel.SetActive(false);
+
+        int count = Mathf.Min(buttons.Length, options.Length);
+        float angleStep = 360f / count;
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (i < count)
+            {
+                // Zera escala ANTES de ativar para evitar piscada
+                buttons[i].transform.localScale = Vector3.zero;
+                PositionButton(buttons[i].GetComponent<RectTransform>(), i, angleStep);
+                buttons[i].SetupBuild(i, options[i]);
+                buttons[i].gameObject.SetActive(true);
+                StartCoroutine(AnimateRoutine(buttons[i].gameObject, i * 0.05f));
+            }
+            else
+            {
+                buttons[i].gameObject.SetActive(false);
+            }
+        }
+
+        if (backgroundCircle != null)
+        {
+            backgroundCircle.transform.localScale = Vector3.zero;
+            backgroundCircle.gameObject.SetActive(true);
+            StartCoroutine(AnimateRoutine(backgroundCircle.gameObject, 0f));
+        }
+    }
+
+    //====================================================
+    // UTILITÁRIOS
+    //====================================================
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    void SetPosition(Vector3 worldPosition)
+    {
         Vector2 screenPos = mainCamera.WorldToScreenPoint(worldPosition);
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -43,64 +91,44 @@ public class BuildMenuUI : MonoBehaviour
         );
 
         GetComponent<RectTransform>().anchoredPosition = localPos;
-
-        int count = Mathf.Min(buttons.Length, options.Length);
-        float angleStep = 360f / count;
-
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            if (i < count)
-            {
-                float angle = (startAngle + angleStep * i) * Mathf.Deg2Rad;
-
-                Vector2 offset = new Vector2(
-                    Mathf.Cos(angle) * radius,
-                    Mathf.Sin(angle) * radius
-                );
-
-                buttons[i].GetComponent<RectTransform>().anchoredPosition = offset;
-                buttons[i].Setup(i, options[i]);
-                buttons[i].gameObject.SetActive(true);
-
-                // Animação de surgimento
-                buttons[i].transform.localScale = Vector3.zero;
-                StartCoroutine(AnimateButton(buttons[i].gameObject, i * 0.05f));
-            }
-            else
-            {
-                buttons[i].gameObject.SetActive(false);
-            }
-        }
-
-        // Anima o fundo
-        if (backgroundCircle != null)
-        {
-            backgroundCircle.gameObject.SetActive(true);
-            StartCoroutine(AnimateButton(backgroundCircle.gameObject, 0f));
-        }
     }
 
-    public void Hide()
+    void PositionButton(RectTransform rt, int index, float angleStep)
     {
-        gameObject.SetActive(false);
+        if (rt == null) return;
+
+        float angle = (startAngle + angleStep * index) * Mathf.Deg2Rad;
+
+        rt.anchoredPosition = new Vector2(
+            Mathf.Cos(angle) * radius,
+            Mathf.Sin(angle) * radius
+        );
     }
 
-    IEnumerator AnimateButton(GameObject btn, float delay)
+    void PositionButton(BuildMenuButton btn, int index, float angleStep)
     {
-        yield return new WaitForSeconds(delay);
+        PositionButton(btn.GetComponent<RectTransform>(), index, angleStep);
+    }
+
+    IEnumerator AnimateRoutine(GameObject obj, float delay)
+    {
+        // Garante escala zero antes de qualquer frame ser renderizado
+        obj.transform.localScale = Vector3.zero;
+
+        if (delay > 0)
+            yield return new WaitForSeconds(delay);
 
         float t = 0f;
 
         while (t < 1f)
         {
+            if (obj == null) yield break;
             t += Time.deltaTime * 10f;
-
-            float scale = Mathf.SmoothStep(0f, 1f, t);
-            btn.transform.localScale = Vector3.one * scale;
-
+            obj.transform.localScale = Vector3.one * Mathf.SmoothStep(0f, 1f, t);
             yield return null;
         }
 
-        btn.transform.localScale = Vector3.one;
+        if (obj != null)
+            obj.transform.localScale = Vector3.one;
     }
 }

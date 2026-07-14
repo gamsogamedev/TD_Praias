@@ -17,22 +17,24 @@ public class BuildSpot : MonoBehaviour
         return currentTower != null;
     }
 
-    private void OnMouseDown()
+   private void OnMouseDown()
     {
-        if (currentTower == null)
-        {
-            BuildManager.Instance.OpenMenu(this);
-        }
-        else
-        {
-            Debug.Log("Já existe uma torre aqui!");
-        }
-    }
+    if (currentTower == null)
+        BuildManager.Instance.OpenMenu(this);
+    else
+        Debug.Log("Já existe uma torre aqui!");
+    }   
+    
+   public void HideSpotVisual()
+    {
+    SpriteRenderer sr = GetComponent<SpriteRenderer>();
+    if (sr != null)
+        sr.enabled = false;
 
-    public void HideSpotVisual()
-    {
-        if (spotVisual != null)
-            spotVisual.SetActive(false);
+    // Esconde também o collider para não ser clicável novamente
+    Collider2D col = GetComponent<Collider2D>();
+    if (col != null)
+        col.enabled = false;
     }
 
     public void ShowSpotVisual()

@@ -20,8 +20,10 @@ public class BuildManager : MonoBehaviour
 
     [Header("UI")]
     public BuildMenuUI buildMenuUI;
+    public UpgradeMenuUI upgradeMenuUI;
 
     private BuildSpot selectedSpot;
+    private Tower selectedTower;
 
     private void Awake()
     {
@@ -31,28 +33,73 @@ public class BuildManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    //====================================================
+    // MENU DE CONSTRUÇÃO
+    //====================================================
+
     public void OpenMenu(BuildSpot spot)
     {
-        // Se clicou no mesmo spot, fecha o menu
         if (selectedSpot == spot)
         {
             CloseMenu();
             return;
         }
 
+        CloseAll();
+
         selectedSpot = spot;
 
-        buildMenuUI.Show(
+        buildMenuUI.ShowBuildMenu(
             spot.transform.position,
             new TowerOption[] { crabTower, turtleTower, octopusTower }
         );
     }
+
+    //====================================================
+    // MENU DE EVOLUÇÃO
+    //====================================================
+
+    public void OpenUpgradeMenu(Tower tower)
+    {
+        if (selectedTower == tower)
+        {
+            CloseAll();
+            return;
+        }
+
+        CloseAll();
+
+        selectedTower = tower;
+        upgradeMenuUI.Show(tower.transform.position, tower);
+    }
+
+    //====================================================
+    // FECHAR
+    //====================================================
 
     public void CloseMenu()
     {
         selectedSpot = null;
         buildMenuUI.Hide();
     }
+
+    public void CloseUpgradeMenu()
+    {
+        selectedTower = null;
+        upgradeMenuUI.Hide();
+    }
+
+    public void CloseAll()
+    {
+        selectedSpot = null;
+        selectedTower = null;
+        buildMenuUI.Hide();
+        upgradeMenuUI.Hide();
+    }
+
+    //====================================================
+    // CONSTRUIR
+    //====================================================
 
     public void BuildTower(int index)
     {
@@ -89,9 +136,7 @@ public class BuildManager : MonoBehaviour
         Tower tower = towerObject.GetComponent<Tower>();
 
         if (tower != null)
-        {
             tower.pathPoints = selectedSpot.pathPoints;
-        }
 
         selectedSpot.currentTower = tower;
         selectedSpot.HideSpotVisual();
@@ -101,9 +146,26 @@ public class BuildManager : MonoBehaviour
         CloseMenu();
     }
 
+    //====================================================
+    // EVOLUIR
+    //====================================================
+
+    public void UpgradeTower()
+    {
+    if (selectedTower == null)
+        return;
+
+    Tower torre = selectedTower; // ← guarda antes de fechar
+    CloseUpgradeMenu();          // ← fecha primeiro
+    torre.UpgradeTower();        // ← depois evolui
+    }
+
+    //====================================================
+    // UPDATE
+    //====================================================
+
     private void Update()
     {
-        // Fecha o menu ao clicar com botão direito ou apertar Escape
         if (selectedSpot == null)
             return;
 

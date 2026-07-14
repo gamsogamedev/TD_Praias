@@ -210,8 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
   team: 0
-  moveSpeed: 1
-  damage: 2
+  moveSpeed: 2.2
+  damage: 4
   attackRate: 1
   attackRange: 0.6
   isRanged: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f926f9aac55e288428d92a737c2f0d0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 10
+  maxHealth: 30
   healthFill: {fileID: 4274845429500482291}
   flashOnHit: 1
   shakeOnHit: 1

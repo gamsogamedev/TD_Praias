@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
@@ -38,43 +39,48 @@ public class WaveManager : MonoBehaviour
     [Header("Configuração das Waves")]
     public int waveAtual = 0;
     public int inimigosBase = 8;
-
     public float tempoEntreSpawns = 1f;
     public float tempoPrimeiraWave = 3f;
-    public float tempoEntreWaves = 8f;
+
+   [Header("Tempo entre Waves")]
+    public float tempoInicial = 5f;
+    public float aumentoTempoPorWave = 2f;
+    public float tempoMaximo = 30f;
 
     [Header("UI")]
     public TMP_Text waveText;
     public TMP_Text countdownText;
 
-    private bool waveEmAndamento = false;
+    [Header("Próxima Wave")]
+    public Button nextWaveButton;
     private int inimigosVivos = 0;
-
+    private float tempoRestanteWave = 0f;
+    private Coroutine autoWaveCoroutine;
+    private bool primeiraWave = true;
     private void Awake()
     {
         Instance = this;
     }
-
     private void OnEnable()
     {
         Health.OnUnitDeath += OnUnitDeath;
     }
-
     private void OnDisable()
     {
         Health.OnUnitDeath -= OnUnitDeath;
     }
-
-    private void Start()
+  private void Start()
     {
-        AtualizarUI();
-        StartCoroutine(IniciarPrimeiraWave());
-    }
+    AtualizarUI();
 
+    if (nextWaveButton != null)
+        nextWaveButton.gameObject.SetActive(true);
+
+    StartCoroutine(IniciarPrimeiraWave());
+    }
     //====================================================
     // EVENTOS
     //====================================================
-
     private void OnUnitDeath(Unit unit)
     {
         if (unit == null)
@@ -87,86 +93,95 @@ public class WaveManager : MonoBehaviour
     }
 
     //====================================================
-    // WAVES
+    // PRIMEIRA WAVE
     //====================================================
-
-    IEnumerator IniciarPrimeiraWave()
+   IEnumerator IniciarPrimeiraWave()
     {
-        yield return Countdown(tempoPrimeiraWave);
+    yield return new WaitForSeconds(tempoPrimeiraWave);
 
-        IniciarProximaWave();
+    primeiraWave = false;
+
+    ComecarWaveAgora();
     }
-
-    public void IniciarProximaWave()
-    {
-        if (waveEmAndamento)
-            return;
-
-        waveAtual++;
-
-        AtualizarUI();
-
-        StartCoroutine(SpawnWave());
-    }
-
+    //====================================================
+    // CONTROLE DAS WAVES
+    //====================================================
     IEnumerator SpawnWave()
     {
-        waveEmAndamento = true;
+    int waveDestaCoroutine = waveAtual;
 
-        int quantidade =
-            Mathf.RoundToInt(
-                inimigosBase + Mathf.Pow(waveAtual, 1.3f)
-            );
+    int quantidade =
+        Mathf.RoundToInt(
+            inimigosBase + Mathf.Pow(waveDestaCoroutine, 1.3f)
+        );
 
-        Debug.Log($"Wave {waveAtual} iniciada com {quantidade} inimigos!");
+    Debug.Log($"Wave {waveDestaCoroutine} iniciada com {quantidade} inimigos!");
 
-        for (int i = 0; i < quantidade; i++)
-        {
-            SpawnEnemy();
+    for (int i = 0; i < quantidade; i++)
+    {
+        SpawnEnemy(waveDestaCoroutine);
 
-            yield return new WaitForSeconds(tempoEntreSpawns);
-        }
+        yield return new WaitForSeconds(tempoEntreSpawns);
+    }
+    }
 
-        while (inimigosVivos > 0)
-            yield return null;
+   public void ComecarWaveAgora()
+    {
+    if (autoWaveCoroutine != null)
+    {
+        StopCoroutine(autoWaveCoroutine);
+        autoWaveCoroutine = null;
+    }
 
-        Debug.Log($"Wave {waveAtual} concluída!");
+    int recompensa = Mathf.CeilToInt(tempoRestanteWave);
 
-        waveEmAndamento = false;
+    if (recompensa > 0)
+    {
+        EconomyManager.Instance.AdicionarOuro(recompensa);
+    }
 
-        yield return Countdown(tempoEntreWaves);
+    if (countdownText != null)
+        countdownText.text = "";
 
-        IniciarProximaWave();
+    tempoRestanteWave = 0;
+
+    waveAtual++;
+
+    AtualizarUI();
+
+    StartCoroutine(SpawnWave());
+
+    ReiniciarTimer();
     }
 
     //====================================================
     // SPAWN
     //====================================================
 
-    void SpawnEnemy()
+    void SpawnEnemy(int wave)
     {
-        EnemyData enemy = EscolherInimigo();
+    EnemyData enemy = EscolherInimigo(wave);
 
-        if (enemy == null)
-            return;
+    if (enemy == null)
+        return;
 
-        GameObject obj = Instantiate(
-            enemy.enemyPrefab,
-            spawnPoint.position,
-            Quaternion.identity
-        );
+    GameObject obj = Instantiate(
+        enemy.enemyPrefab,
+        spawnPoint.position,
+        Quaternion.identity
+    );
 
-        UnitMovement movement = obj.GetComponent<UnitMovement>();
+    UnitMovement movement = obj.GetComponent<UnitMovement>();
 
-        if (movement != null)
-        {
-            movement.SetPath(pathPoints);
-        }
-
-        inimigosVivos++;
+    if (movement != null)
+    {
+        movement.SetPath(pathPoints);
     }
 
-    EnemyData EscolherInimigo()
+    inimigosVivos++;
+    }
+
+    EnemyData EscolherInimigo(int wave)
     {
         List<EnemyData> disponiveis = new();
         List<int> pesos = new();
@@ -175,12 +190,12 @@ public class WaveManager : MonoBehaviour
 
         foreach (EnemyData enemy in enemies)
         {
-            if (waveAtual < enemy.waveMinima)
+            if (wave < enemy.waveMinima)
                 continue;
 
             int peso =
                 enemy.chanceInicial +
-                (waveAtual - enemy.waveMinima) *
+                (wave - enemy.waveMinima) *
                 enemy.aumentoChancePorWave;
 
             peso = Mathf.Clamp(
@@ -216,50 +231,25 @@ public class WaveManager : MonoBehaviour
     //====================================================
     // CONTAGEM DE INIMIGOS
     //====================================================
-
-    // Chamado quando um inimigo morre em combate (via Health.OnUnitDeath)
     private void DecrementarInimigos()
     {
         inimigosVivos = Mathf.Max(0, inimigosVivos - 1);
     }
 
-    // Chamado quando um inimigo chega à base inimiga (via UnitMovement)
     public void EnemyReachedBase()
     {
         inimigosVivos = Mathf.Max(0, inimigosVivos - 1);
     }
-
-    //====================================================
-    // CONTADOR ENTRE WAVES
-    //====================================================
-
-    IEnumerator Countdown(float tempo)
+    float GetTempoEntreWaves()
     {
-        float restante = tempo;
-
-        while (restante > 0)
-        {
-            if (countdownText != null)
-            {
-                countdownText.text =
-                    "Próxima Wave em: " + Mathf.CeilToInt(restante);
-            }
-
-            restante -= Time.deltaTime;
-
-            yield return null;
-        }
-
-        if (countdownText != null)
-        {
-            countdownText.text = "";
-        }
+        return Mathf.Min(
+            tempoInicial + Mathf.Sqrt(waveAtual) * aumentoTempoPorWave,
+            tempoMaximo
+        );
     }
-
     //====================================================
     // UI
     //====================================================
-
     void AtualizarUI()
     {
         if (waveText != null)
@@ -271,12 +261,9 @@ public class WaveManager : MonoBehaviour
     //====================================================
     // GETTERS
     //====================================================
-
     public int GetWaveAtual() => waveAtual;
 
     public int GetInimigosVivos() => inimigosVivos;
-
-    public bool WaveEmAndamento() => waveEmAndamento;
 
     public int GetQuantidadeInimigosDaWave()
     {
@@ -284,7 +271,6 @@ public class WaveManager : MonoBehaviour
             inimigosBase + Mathf.Pow(waveAtual, 1.3f)
         );
     }
-
     //====================================================
     // DEBUG
     //====================================================
@@ -292,7 +278,39 @@ public class WaveManager : MonoBehaviour
     [ContextMenu("Iniciar Próxima Wave")]
     public void DebugStartWave()
     {
-        if (!waveEmAndamento)
-            IniciarProximaWave();
+        ComecarWaveAgora();
     }
+    void ReiniciarTimer()
+{
+    if (primeiraWave)
+        return;
+
+    if (autoWaveCoroutine != null)
+        StopCoroutine(autoWaveCoroutine);
+
+    autoWaveCoroutine = StartCoroutine(AutoWaveTimer());
+}
+
+IEnumerator AutoWaveTimer()
+{
+    tempoRestanteWave = GetTempoEntreWaves();
+
+    while (tempoRestanteWave > 0)
+    {
+        if (countdownText != null)
+        {
+            countdownText.text =
+                "Próxima Wave em: " +
+                Mathf.CeilToInt(tempoRestanteWave);
+        }
+
+        tempoRestanteWave -= Time.deltaTime;
+
+        yield return null;
+    }
+
+    tempoRestanteWave = 0;
+
+    ComecarWaveAgora();
+}
 }
